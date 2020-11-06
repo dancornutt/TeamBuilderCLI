@@ -19,4 +19,4 @@ class Employee {
     };
 }
 
-export default Employee
+module.exports = Employee;
