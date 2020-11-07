@@ -52,7 +52,7 @@ const qLib = {
     },
     officeNumber: {
         type: "input",
-        message: "What is the manager's office number",
+        message: "What is their office number?",
         name: "officeNumber"
     },
     gethub: {
@@ -74,96 +74,76 @@ const qLib = {
         type: "list",
         message: "What kind of employee should be added to the team?",
         name: "teamMember",
-        choices: ["Intern", "Engineer"]
+        choices: ["Intern", "Engineer"],
+        default: "Engineer"
     },
     addAnotherEmployee: {
-        type: "list",
+        type: "confirm",
         message: "Would you like to add another Employee to the team?",
-        name: "addAnother",
-        choices: ["Yes", "No"]
+        name: "addAnother"
     }
 }
 
 let team = [];
 
-// const employeeTypeQ = {
-//     type: "list",
-//     message: "What kind of employee should be added to the team?",
-//     name: "teamMember",
-//     choices: ["Intern", "Engineer"]
-// }
-
-// const addAnotherEmployeeQ = {
-//     type: "list",
-//     message: "Would you like to add another Employee to the team?",
-//     name: "addAnother",
-//     choices: ["Yes", "No"]
-// }
-
-function askQuestion(question) {
-    inquirer.prompt([question])
-        .then((answer) => {
-            console.log("from askQuestion", answer);
-            return answer
-        });
+async function addToTeam(person) {
+    //Adds user to team
+    console.log(`Adding ${person} to team`)
+    let questions = Object.keys(person);
+    let answers = await askQuestions(questions);
+    team.push(person(answers));
+    console.log("From addToTeam:", questions, answers, team);
 }
 
-// function finishedBuildingTeam() {
-//     inquirer
-//         .prompt([
-//         {
-//         name: "finishedBuilding",
-//         type: "confirm",
-//         message: "Do you want to add another employee to the team?",
-//         },
-//     ])
-//     .then((answer) => {
-//         console.log("from finishedBuildingTeam", answer);
-//         return answer
+async function askQuestions(questions) {
+    
+    //Build array of object questions
+    let promptArr = [];
+    questions.forEach(element => {
+        promptArr.push(qLib[element])
+    });
 
-//     });
-// }
+    //Ask user questions
+    await inquirer.prompt(promptArr)
+    .then(answers => {
+        console.log("Answers from user:", answer);
+        return answers
+    })
+}
 
 function init() {
     let finished = false;
-    
-    //Base Team has one manager
-    addToTeam(new Manager);
-    while (!finished) {
-        if (askQuestion("finishedBuilding")) {
-            finished = true;
-            break
-        };
-        //Add users to team
-        inquirer.prompt(qLib.employeeType)
-        .then(function(response) {
-            console.log("User has chosen: ", response)
-            switch (response){
-                case "Intern":
-                    console.log("Intern");
-                    person = new Intern;
-                    addToTeam(new Intern)
-                    break;
-                case "Engineer":
-                    console.log("Engineer");
-                    person = new Engineer;
-                    addToTeam(new Engineer)
-                    break;              
-            }
-        })
-    };
-    // render(team);
-    console.log(team);
-};
 
-function addToTeam(person) {
-    //Asks question and adds user to team
-    let questions = Object.keys(person);
-    let answers = [];
-    questions.forEach(element => {
-        answers.push(askQuestion(qLib[element]));
-    });
-    team.push(person(answers))
-}
+    // //Base Team has one manager
+    addToTeam(new Manager);
+
+    // //Add Team Loop
+    // while (!finished) {
+    //     console.log("From addToTeam:")
+    //     if (askQuestions(["finishedBuilding"])) {
+    //         finished = true;
+    //         break
+    //     };
+    //     //Add users to team
+    //     inquirer.prompt(qLib.employeeType)
+    //     .then(function(response) {
+    //         console.log("User has chosen: ", response)
+    //         switch (response){
+    //             case "Intern":
+    //                 console.log("Intern");
+    //                 person = new Intern;
+    //                 addToTeam(new Intern)
+    //                 break;
+    //             case "Engineer":
+    //                 console.log("Engineer");
+    //                 person = new Engineer;
+    //                 addToTeam(new Engineer)
+    //                 break;              
+    //         }
+    //     })
+    // };
+    // // render(team);
+    // console.log(team);
+};
 
 init();
