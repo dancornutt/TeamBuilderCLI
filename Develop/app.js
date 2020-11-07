@@ -70,13 +70,13 @@ const qLib = {
         message: "Where did the intern go to school?",
         name: "school"
     },
-    employeeType = {
+    employeeType: {
         type: "list",
         message: "What kind of employee should be added to the team?",
         name: "teamMember",
         choices: ["Intern", "Engineer"]
     },
-    addAnotherEmployee = {
+    addAnotherEmployee: {
         type: "list",
         message: "Would you like to add another Employee to the team?",
         name: "addAnother",
