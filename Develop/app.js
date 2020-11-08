@@ -10,6 +10,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 const { exit } = require("process");
+const { resolve } = require("path");
 
 
 // Write code to use inquirer to gather information about the development team members,
@@ -84,38 +85,40 @@ const qLib = {
     }
 }
 
+const personLib = {
+    manager : Manager,
+    intern: Intern,
+    engineer: Engineer
+}
+
 let team = [];
 
 async function addToTeam(person) {
     //Adds user to team
     console.log(`Adding ${person} to team`)
-    let questions = Object.keys(person);
-    let answers = await askQuestions(questions);
-    team.push(person(answers));
-    console.log("From addToTeam:", questions, answers, team);
+    let questions = Object.keys(new personLib[person]);
+    let constrArr = Object.values(await askQuestions(questions))
+    //TODO refactor line below. Fragile, only works with Object params length 4
+    team.push(new personLib[person](constrArr[0], constrArr[1], constrArr[2], constrArr[3]));
+    console.log("From addToTeam:", team);
 }
 
-async function askQuestions(questions) {
+function askQuestions(questions) {
     
     //Build array of object questions
     let promptArr = [];
     questions.forEach(element => {
         promptArr.push(qLib[element])
     });
-
     //Ask user questions
-    await inquirer.prompt(promptArr)
-    .then(answers => {
-        console.log("Answers from user:", answer);
-        return answers
-    })
+    return inquirer.prompt(promptArr)
 }
 
 function init() {
     let finished = false;
 
     // //Base Team has one manager
-    addToTeam(new Manager);
+    addToTeam("manager");
 
     // //Add Team Loop
     // while (!finished) {
@@ -143,7 +146,7 @@ function init() {
     //     })
     // };
     // // render(team);
-    // console.log(team);
+    // console.log("Team is", team);
 };
 
 init();
