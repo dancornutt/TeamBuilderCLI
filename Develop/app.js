@@ -86,10 +86,12 @@ const personLib = {
     engineer: Engineer
 }
 
+//Global team array of people objects
 let team = [];
 
+//Builds string array of questions to ask based on parameter value, adds teammember object to team array
+//Params: string of person to be added to team
 async function addToTeam(person) {
-    //Adds user to team
     console.log(`Adding ${person} to team`)
     let questions = Object.keys(new personLib[person]);
     let constrArr = Object.values(await askQuestions(questions))
@@ -98,20 +100,18 @@ async function addToTeam(person) {
     console.log("From addToTeam:", team);
 }
 
+//Builds set of questions objects to ask user, and asks questions, returns values
+//Params: string array of questions to be asked
+//Returns object array of answers from user.
 function askQuestions(questions) {
-    //Build array of object questions
     let promptArr = [];
-    questions.forEach(element => {
-        promptArr.push(qLib[element])
-    });
-    //Ask user questions
+    questions.forEach(element => promptArr.push(qLib[element]));
     return inquirer.prompt(promptArr)
 }
 
 async function init() {
     let finished = false;
-
-    // //Base Team has one manager
+    // //Base Team has only one manager
     // await addToTeam("manager"); ****working
 
     // //Add Team Loop
@@ -121,18 +121,18 @@ async function init() {
             break
         };
         //Add users to team
-        // inquirer.prompt(qLib.employeeType)
-        // .then(function(response) {
-        //     console.log("User has chosen: ", response)
-        //     switch (response){
-        //         case "Intern":
-        //             addToTeam("intern")
-        //             break;
-        //         case "Engineer":
-        //             addToTeam(engineer)
-        //             break;              
-        //     }
-        // })
+        inquirer.prompt(qLib.employeeType)
+        .then(function(response) {
+            console.log("User has chosen: ", response)
+            switch (response){
+                case "Intern":
+                    addToTeam("intern")
+                    break;
+                case "Engineer":
+                    addToTeam(engineer)
+                    break;              
+            }
+        })
     };
     // render(team);
     console.log("Team is", team);
