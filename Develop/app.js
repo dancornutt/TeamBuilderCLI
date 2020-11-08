@@ -66,11 +66,6 @@ const qLib = {
         message: "Where did the intern go to school?",
         name: "school"
     },
-    finishedBuilding: {
-        type: "input",
-        message: "Where did the intern go to school?",
-        name: "school"
-    },
     employeeType: {
         type: "list",
         message: "What kind of employee should be added to the team?",
@@ -78,10 +73,10 @@ const qLib = {
         choices: ["Intern", "Engineer"],
         default: "Engineer"
     },
-    addAnotherEmployee: {
+    finishedBuildingTeam: {
         type: "confirm",
-        message: "Would you like to add another Employee to the team?",
-        name: "addAnother"
+        message: "Are you done building the team?",
+        name: "finished"
     }
 }
 
@@ -104,7 +99,6 @@ async function addToTeam(person) {
 }
 
 function askQuestions(questions) {
-    
     //Build array of object questions
     let promptArr = [];
     questions.forEach(element => {
@@ -114,39 +108,34 @@ function askQuestions(questions) {
     return inquirer.prompt(promptArr)
 }
 
-function init() {
+async function init() {
     let finished = false;
 
     // //Base Team has one manager
-    addToTeam("manager");
+    // await addToTeam("manager"); ****working
 
     // //Add Team Loop
-    // while (!finished) {
-    //     console.log("From addToTeam:")
-    //     if (askQuestions(["finishedBuilding"])) {
-    //         finished = true;
-    //         break
-    //     };
-    //     //Add users to team
-    //     inquirer.prompt(qLib.employeeType)
-    //     .then(function(response) {
-    //         console.log("User has chosen: ", response)
-    //         switch (response){
-    //             case "Intern":
-    //                 console.log("Intern");
-    //                 person = new Intern;
-    //                 addToTeam(new Intern)
-    //                 break;
-    //             case "Engineer":
-    //                 console.log("Engineer");
-    //                 person = new Engineer;
-    //                 addToTeam(new Engineer)
-    //                 break;              
-    //         }
-    //     })
-    // };
-    // // render(team);
-    // console.log("Team is", team);
+    while (!finished) {
+        if ((await askQuestions(["finishedBuildingTeam"])).finished) {
+            finished = true;
+            break
+        };
+        //Add users to team
+        // inquirer.prompt(qLib.employeeType)
+        // .then(function(response) {
+        //     console.log("User has chosen: ", response)
+        //     switch (response){
+        //         case "Intern":
+        //             addToTeam("intern")
+        //             break;
+        //         case "Engineer":
+        //             addToTeam(engineer)
+        //             break;              
+        //     }
+        // })
+    };
+    // render(team);
+    console.log("Team is", team);
 };
 
 init();
