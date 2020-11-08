@@ -70,7 +70,7 @@ const qLib = {
         type: "list",
         message: "What kind of employee should be added to the team?",
         name: "teamMember",
-        choices: ["Intern", "Engineer"],
+        choices: ["Intern", "Engineer", "Manager"],
         default: "Engineer"
     },
     finishedBuildingTeam: {
@@ -81,9 +81,9 @@ const qLib = {
 }
 
 const personLib = {
-    manager : Manager,
-    intern: Intern,
-    engineer: Engineer
+    "Manager" : Manager,
+    "Intern": Intern,
+    "Engineer": Engineer
 }
 
 //Global team array of people objects
@@ -94,7 +94,8 @@ let team = [];
 async function addToTeam(person) {
     console.log(`Adding ${person} to team`)
     let questions = Object.keys(new personLib[person]);
-    let constrArr = Object.values(await askQuestions(questions))
+    let constrArr = Object.values(await askQuestions(questions));
+    console.log("From addToTeam: constArr");
     //TODO refactor line below. Fragile, only works with Object params length 4
     team.push(new personLib[person](constrArr[0], constrArr[1], constrArr[2], constrArr[3]));
     console.log("From addToTeam:", team);
@@ -109,30 +110,43 @@ function askQuestions(questions) {
     return inquirer.prompt(promptArr)
 }
 
-async function init() {
-    let finished = false;
-    // //Base Team has only one manager
-    // await addToTeam("manager"); ****working
+async function addWhichEmployeeType() {
+    if ((await askQuestions(["finishedBuildingTeam"])).finished) {
+        return false
+    } else {
+    inquirer.prompt(qLib.employeeType)
+            .then(function(response) {
+                console.log("User has chosen: ", response.teamMember)
+                switch (response.teamMember){
+                    case "Intern":
+                        addToTeam("Intern")
+                        break;
+                    case "Engineer":
+                        addToTeam("Engineer")
+                        break;
+                    case "Manager":
+                        addToTeam("Manager")
+                        break;              
+                };
+                return true
+            })
+        }
+}
 
+async function init() {
+    // //Base Team has only one manager
+    // await addToTeam("Manager"); ****working
+
+    let buildingTeam = true;
     // //Add Team Loop
-    while (!finished) {
-        if ((await askQuestions(["finishedBuildingTeam"])).finished) {
-            finished = true;
-            break
-        };
-        //Add users to team
-        inquirer.prompt(qLib.employeeType)
-        .then(function(response) {
-            console.log("User has chosen: ", response)
-            switch (response){
-                case "Intern":
-                    addToTeam("intern")
-                    break;
-                case "Engineer":
-                    addToTeam(engineer)
-                    break;              
-            }
-        })
+    while (buildingTeam) {
+        // if ((await askQuestions(["finishedBuildingTeam"])).finished) {
+        //     break
+        // } else{
+            //Asks user for which type of employee to add. Calls function to add employee.
+            buildingTeam = await addWhichEmployeeType();
+            console.log("building team", buildingTeam);
+        // }
     };
     // render(team);
     console.log("Team is", team);
