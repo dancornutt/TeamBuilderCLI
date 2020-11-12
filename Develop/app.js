@@ -56,7 +56,7 @@ const qLib = {
         message: "What is their office number?",
         name: "officeNumber"
     },
-    gethub: {
+    github: {
         type: "input",
         message: "What is the Engineer's github repo?",
         name: "github"
