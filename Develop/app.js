@@ -92,13 +92,11 @@ let team = [];
 //Builds string array of questions to ask based on parameter value, adds teammember object to team array
 //Params: string of person to be added to team
 async function addToTeam(person) {
-    console.log(`Adding ${person} to team`)
     let questions = Object.keys(new personLib[person]);
     let constrArr = Object.values(await askQuestions(questions));
-    console.log("From addToTeam: constArr");
     //TODO refactor line below. Fragile, only works with Object params length 4
     team.push(new personLib[person](constrArr[0], constrArr[1], constrArr[2], constrArr[3]));
-    console.log("From addToTeam:", team);
+    return true;
 }
 
 //Builds set of questions objects to ask user, and asks questions, returns values
@@ -110,46 +108,22 @@ function askQuestions(questions) {
     return inquirer.prompt(promptArr)
 }
 
-async function addWhichEmployeeType() {
-    if ((await askQuestions(["finishedBuildingTeam"])).finished) {
-        return false
-    } else {
-    inquirer.prompt(qLib.employeeType)
-            .then(function(response) {
-                console.log("User has chosen: ", response.teamMember)
-                switch (response.teamMember){
-                    case "Intern":
-                        addToTeam("Intern")
-                        break;
-                    case "Engineer":
-                        addToTeam("Engineer")
-                        break;
-                    case "Manager":
-                        addToTeam("Manager")
-                        break;              
-                };
-                return true
-            })
-        }
-}
-
 async function init() {
     // //Base Team has only one manager
-    // await addToTeam("Manager"); ****working
+    await addToTeam("Manager");
 
-    let buildingTeam = true;
     // //Add Team Loop
+    let buildingTeam = true;
     while (buildingTeam) {
-        // if ((await askQuestions(["finishedBuildingTeam"])).finished) {
-        //     break
-        // } else{
-            //Asks user for which type of employee to add. Calls function to add employee.
-            buildingTeam = await addWhichEmployeeType();
-            console.log("building team", buildingTeam);
-        // }
-    };
-    // render(team);
-    console.log("Team is", team);
+        const getBuilding = await inquirer.prompt(qLib["finishedBuildingTeam"]);
+        if (!getBuilding.finished) {
+            const getNewMember = await inquirer.prompt(qLib["employeeType"]);
+            await addToTeam(`${getNewMember.teamMember}`);
+        } else {
+            buildingTeam = false;
+        }
+    }
+    render(team);
 };
 
 init();
