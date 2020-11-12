@@ -96,7 +96,6 @@ async function addToTeam(person) {
     let constrArr = Object.values(await askQuestions(questions));
     //TODO refactor line below. Fragile, only works with Object params length 4
     team.push(new personLib[person](constrArr[0], constrArr[1], constrArr[2], constrArr[3]));
-    return true;
 }
 
 //Builds set of questions objects to ask user, and asks questions, returns values
@@ -108,8 +107,23 @@ function askQuestions(questions) {
     return inquirer.prompt(promptArr)
 }
 
+function writeHTML(htmlData) {
+    fs.access('./output'), function(err) {
+        if (err && err.code === 'ENOENT') {
+          fs.mkdir(path.join(__dirname, 'output'), err => console.log(err));
+        }
+    };
+    fs.writeFile("./", htmlData, function(err) {
+        if (err) {
+            return console.log(err)
+        }
+    })
+}
+
+//Main loop for adding people to a team
 async function init() {
     // //Base Team has only one manager
+    console.log("Let's first create the manager...");
     await addToTeam("Manager");
 
     // //Add Team Loop
@@ -123,7 +137,8 @@ async function init() {
             buildingTeam = false;
         }
     }
-    render(team);
+    console.log(team);
+    writeHTML(render(team));
 };
 
 init();
