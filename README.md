@@ -2,12 +2,7 @@
 
 The intent of this project is to create a team web site through a CLI Command Line Interface. The CLI interface will prompt the user with a series of questions based on which type of team member they are adding. Team member types are Manager (one per team), Engineer, and Intern. After the user is done with one team member the CLI will ask if the user is done create the team. The user can select 'N' for no and add another team member. Once the user is done creating the team, the CLI generates the team.html page in the output folder at the working directory.
 
-![TeamBuilderCLI](https://github.com/dancornutt/UWB-06HW-WeatherDashboard/blob/master/images/weatherApp.png)
-
-## Getting Started
-
-Luckily this is a static site so there isn't much set-up to do. knowledge of javascript would be helpful if you would like to add more functionality to the weather app.
-View the site here: [Weather App](https://dancornutt.github.io/UWB-06HW-WeatherDashboard/)
+![TeamBuilderCLI](https://github.com/dancornutt/TeamBuilderCLI/blob/main/Assets/TeamBuildingCLI-App.png)
 
 ### Prerequisites
 
